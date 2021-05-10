@@ -52,9 +52,26 @@ class QuestionViewController: UIViewController {
     @IBOutlet weak var multiSwitch4: UISwitch!
     
     
+    @IBOutlet weak var rangedSlider: UISlider!
     
     
     
+    
+    @IBAction func rangedAnswerButtonPressed(_ sender: Any) {
+        
+        let currentAnswers = questions[questionIndex].answers
+        let index = Int(round(rangedSlider.value * Float(currentAnswers.count - 1)))
+        answersChosen.append(currentAnswers[index])
+        nextQuestion()
+        
+    }
+    
+    
+    @IBSegueAction func showResults(_ coder: NSCoder) -> ResultsViewController? {
+        return ResultsViewController(coder: coder, responses: answersChosen)
+        
+        
+    }
     
     
     
@@ -72,6 +89,15 @@ class QuestionViewController: UIViewController {
     }
     
     @IBAction func multipleAnswerButtonPressed(_ sender: UIButton) {
+        
+        let currentAnswers = questions[questionIndex].answers
+                if multiSwitch1.isOn {
+                    answersChosen.append(currentAnswers[0]) }
+                if multiSwitch2.isOn { answersChosen.append(currentAnswers[1]) }
+                if multiSwitch3.isOn { answersChosen.append(currentAnswers[2]) }
+                if multiSwitch4.isOn { answersChosen.append(currentAnswers[3])}
+                nextQuestion()
+        
     }
     
     
@@ -117,6 +143,10 @@ class QuestionViewController: UIViewController {
     
     func updateMultipleStack(using answers: [Answer]) {
     multipleStackView.isHidden = false
+    multiSwitch1.isOn = false
+    multiSwitch2.isOn = false
+    multiSwitch3.isOn = false
+    multiSwitch4.isOn = false
     multiLabel1.text = answers[0].text
     multiLabel2.text = answers[1].text
     multiLabel3.text = answers[2].text
@@ -124,6 +154,7 @@ class QuestionViewController: UIViewController {
     
     func updateRangedStack(using answers: [Answer]) {
     rangedStackView.isHidden = false
+    rangedSlider.setValue(0.5, animated: false) 
     rangedLabel1.text = answers.first?.text
     rangedLabel2.text = answers.last?.text
     }
